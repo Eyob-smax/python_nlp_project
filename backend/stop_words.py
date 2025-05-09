@@ -25,5 +25,4 @@ async def stopping_words(normalized_array: List[Dict[str, object]]) -> List[Dict
     
     return normalized_array_without_stop_words
 
-# For Python module export
 __all__ = ['stopping_words']

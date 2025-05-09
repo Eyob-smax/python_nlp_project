@@ -10,7 +10,6 @@ def stem_word(word: str) -> str:
     exceptions = {
         "sky", "news", "how", "new", "now", "know", "able", "age", "ago", "air",
         "all", "and", "any", "are", "art", "ask", "ate", "bad", "bag", "ban",
-        # ... (rest of your exceptions list)
         "fish", "aircraft", "series", "species"
     }
 
@@ -33,7 +32,6 @@ def stem_word(word: str) -> str:
     if word.endswith("ss") or word.endswith("us"):
         return word
 
-    # Handle prefixes
     for prefix in prefixes:
         if word.startswith(prefix) and len(word) > len(prefix) + 2:
             stem = word[len(prefix):]
@@ -42,7 +40,6 @@ def stem_word(word: str) -> str:
                     word = stem
                     break
 
-    # Handle suffixes
     for suffix in suffixes:
         if word.endswith(suffix) and len(word) > len(suffix) + 2:
             stem = word[:-len(suffix)]
@@ -51,11 +48,9 @@ def stem_word(word: str) -> str:
                     word = stem
                     break
 
-    # Handle double letters
     if re.search(r'([a-z])\1$', word):
         word = word[:-1]
 
-    # Handle 'i' ending
     if word.endswith("i") and len(word) > 3:
         word = word[:-1] + "y"
 
@@ -64,5 +59,4 @@ def stem_word(word: str) -> str:
 
     return word
 
-# For Python module export
 __all__ = ['stemmer_algo']

@@ -1,4 +1,3 @@
-import asyncio
 from pathlib import Path
 from typing import Dict, List
 from text_processing_tokenize import tokenize
@@ -13,24 +12,18 @@ async def get_index(document: str) -> Dict[str, object]:
     cleaned_length = markup_result['cleanedLength']
     cleaned_text = markup_result['cleanedText']
     
-    # Save cleaned text
     pathfile = "./documents/markupFreeText.txt"
     Path(pathfile).write_text(cleaned_text, encoding='utf-8')
     
-    # Step 2: Process text through pipeline
     tokenized_array =  tokenize(pathfile)
     normalized_array = await normalize(tokenized_array)
     remove_stop_words = await stopping_words(normalized_array)
     stemmed_array = await stemmer_algo(remove_stop_words)
     
-    # Step 3: Analyze and construct index
     most_frequent = stemmed_array[0]['count']
     least_frequent = stemmed_array[-1]['count']
     
     index_string = construct_index(least_frequent, stemmed_array, most_frequent)
-    
-    # Uncomment to enable statistics (matches your commented JS code)
-    # analyse_statistics(stemmed_array, initial_length, cleaned_length)
     
     return {
         'initialLength': initial_length,
@@ -69,5 +62,4 @@ def construct_index(
     )
     return stripped_string
 
-# For Python module export
 __all__ = ['get_index']

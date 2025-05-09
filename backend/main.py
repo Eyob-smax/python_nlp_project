@@ -3,8 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 from contextlib import asynccontextmanager
 import aiofiles
-from pathlib import Path
-from typing import Optional
 from markup import remove_markup
 from text_processing_tokenize import tokenize
 from normalize import normalize
@@ -14,7 +12,6 @@ from construct_index import get_index
 
 app = FastAPI()
 
-# CORS Configuration
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
@@ -23,19 +20,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Constants
 UPLOAD_DIR = "documents"
 UPLOAD_FILE_PATH = os.path.join(UPLOAD_DIR, "test.html")
 MARKUP_FREE_PATH = os.path.join(UPLOAD_DIR, "markupFreeText.txt")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup code
     os.makedirs(UPLOAD_DIR, exist_ok=True)
     
-    yield  # Application runs here
-    
-    # (Optional) Shutdown code
+    yield
 
 app = FastAPI(lifespan=lifespan)
 
@@ -55,10 +48,8 @@ async def calculate_percentage(initial: int, reduced: int) -> float:
 @app.post("/api/upload")
 async def upload_file(file: UploadFile = File(...)):
     try:
-        # Delete existing file first
         await delete_file(UPLOAD_FILE_PATH)
         
-        # Save new file
         async with aiofiles.open(UPLOAD_FILE_PATH, 'wb') as f:
             content = await file.read()
             await f.write(content)
@@ -93,8 +84,7 @@ async def get_tokenized():
     try:
         if not await file_exists(UPLOAD_FILE_PATH):
             raise HTTPException(status_code=400, detail="No document uploaded")
-        
-        # Get initial length
+
         async with aiofiles.open(UPLOAD_FILE_PATH, 'r', encoding='utf-8') as f:
             content = await f.read()
             initial_length = len(content)

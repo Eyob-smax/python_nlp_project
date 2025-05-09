@@ -4,5 +4,4 @@ def tokenize(markup_cleaned_file):
     tokenized_text = text.split(' ')
     return tokenized_text
 
-# For Python module export
 __all__ = ['tokenize']

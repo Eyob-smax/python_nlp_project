@@ -3,19 +3,15 @@ import aiofiles
 from bs4 import BeautifulSoup
 
 async def remove_markup(filename):
-    # Read file asynchronously
     async with aiofiles.open(filename, 'r', encoding='utf-8') as f:
         text_with_markup = await f.read()
     
     initial_total_length = len(text_with_markup)
     
-    # Parse HTML
     soup = BeautifulSoup(text_with_markup, 'html.parser')
     
-    # Get text content
     cleaned_text = soup.get_text()
     
-    # Apply cleaning transformations
     cleaned_text = re.sub(r'<script[^>]*>[\s\S]*?</script>', '', cleaned_text, flags=re.IGNORECASE)
     cleaned_text = re.sub(r'<style[^>]*>[\s\S]*?</style>', '', cleaned_text, flags=re.IGNORECASE)
     cleaned_text = re.sub(r'\s+', ' ', cleaned_text)
